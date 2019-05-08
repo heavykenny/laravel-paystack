@@ -112,12 +112,12 @@ class Paystack
     public function makePaymentRequest($amount, $email, $full_name, $reference)
     {
         $data = [
-            "amount" => intval($amount * 10),
+            "amount" => intval($amount),
             "reference" => $reference,
             "email" => $email,
             "first_name" => $full_name,
         ];
-        
+
         // Remove the fields which were not sent (value would be null)
         array_filter($data);
 
