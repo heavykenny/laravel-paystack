@@ -109,36 +109,18 @@ class Paystack
      * @return Paystack
      */
 
-    public function makePaymentRequest( $data = null)
+    public function makePaymentRequest($amount, $email, $full_name, $reference)
     {
-        if ( $data == null ) {
+        
             $data = [
-                "amount" => intval(request()->amount),
-                "reference" => request()->reference,
-                "email" => request()->email,
-                "plan" => request()->plan,
-                "first_name" => request()->first_name,
-                "last_name" => request()->last_name,
-                "callback_url" => request()->callback_url,
-                /*
-                * to allow use of metadata on Paystack dashboard and a means to return additional data back to redirect url
-                * form need an input field: <input type="hidden" name="metadata" value="{{ json_encode($array) }}" >
-                *array must be set up as: $array = [ 'custom_fields' => [
-                *                                                            ['display_name' => "Cart Id", "variable_name" => "cart_id", "value" => "2"],
-                *                                                            ['display_name' => "Sex", "variable_name" => "sex", "value" => "female"],
-                *                                                            .
-                *                                                            .
-                *                                                            .
-                *                                                        ]
-                *                                        
-                *                                  ]
-                */
-                'metadata' => request()->metadata
+                "amount" => intval($amount * 100),
+                "reference" => $reference,
+                "email" => $email,
+                "first_name" => $full_name,
             ];
 
             // Remove the fields which were not sent (value would be null)
             array_filter($data);
-        }
 
         $this->setHttpResponse('/transaction/initialize', 'POST', $data);
 
@@ -171,9 +153,9 @@ class Paystack
      * Get the authorization url from the callback response
      * @return Paystack
      */
-    public function getAuthorizationUrl()
+    public function getAuthorizationUrl($amount, $email, $full_name, $reference)
     {
-        $this->makePaymentRequest();
+        $this->makePaymentRequest($amount, $email, $full_name, $reference);
 
         $this->url = $this->getResponse()['data']['authorization_url'];
 
@@ -186,9 +168,9 @@ class Paystack
      * and might need to take different actions based on the success or not of the transaction
      * @return array
      */
-    public function getAuthorizationResponse($data)
+    public function getAuthorizationResponse($amount, $email, $full_name, $reference)
     {
-        $this->makePaymentRequest($data);
+        $this->makePaymentRequest($amount, $email, $full_name, $reference);
 
         $this->url = $this->getResponse()['data']['authorization_url'];
 
