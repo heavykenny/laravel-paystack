@@ -111,16 +111,15 @@ class Paystack
 
     public function makePaymentRequest($amount, $email, $full_name, $reference)
     {
+        $data = [
+            "amount" => intval($amount * 10),
+            "reference" => $reference,
+            "email" => $email,
+            "first_name" => $full_name,
+        ];
         
-            $data = [
-                "amount" => intval($amount * 100),
-                "reference" => $reference,
-                "email" => $email,
-                "first_name" => $full_name,
-            ];
-
-            // Remove the fields which were not sent (value would be null)
-            array_filter($data);
+        // Remove the fields which were not sent (value would be null)
+        array_filter($data);
 
         $this->setHttpResponse('/transaction/initialize', 'POST', $data);
 
