@@ -574,23 +574,27 @@ class Paystack
      * 
      * @return array
      */
-    
-    public function createSubAccount(){
+
+    public function createSubAccount(
+        $business_name,
+        $settlement_bank,
+        $account_number,
+        $percentage_charge,
+        $primary_contact_email,
+        $primary_contact_name
+    ) {
         $data = [
-            "business_name" => request()->business_name, 
-            "settlement_bank" => request()->settlement_bank,
-            "account_number" => request()->account_number,
-            "percentage_charge" => request()->percentage_charge,
-            "primary_contact_email" => request()->primary_contact_email,
-            "primary_contact_name" => request()->primary_contact_name,
-            "primary_contact_phone" => request()->primary_contact_phone,
-            "metadata" => request()->metadata,
-            'settlement_schedule' => request()->settlement_schedule
+            "business_name" => $business_name,
+            "settlement_bank" => $settlement_bank,
+            "account_number" => $account_number,
+            "percentage_charge" => $percentage_charge,
+            "primary_contact_email" => $primary_contact_email,
+            "primary_contact_name" => $primary_contact_name,
+            'settlement_schedule' => 'auto'
         ];
 
         $this->setRequestOptions();
         return $this->setHttpResponse('/subaccount', 'POST', array_filter($data))->getResponse();
-
     }
 
      /**
