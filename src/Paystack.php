@@ -109,13 +109,14 @@ class Paystack
      * @return Paystack
      */
 
-    public function makePaymentRequest($amount, $email, $full_name, $reference)
+    public function makePaymentRequest($amount, $email, $full_name, $reference, $merchant_sub_key = null)
     {
         $data = [
             "amount" => intval($amount),
             "reference" => $reference,
             "email" => $email,
             "first_name" => $full_name,
+            'subaccount' =>  $merchant_sub_key
         ];
 
         // Remove the fields which were not sent (value would be null)
@@ -152,9 +153,9 @@ class Paystack
      * Get the authorization url from the callback response
      * @return Paystack
      */
-    public function getAuthorizationUrl($amount, $email, $full_name, $reference)
+    public function getAuthorizationUrl($amount, $email, $full_name, $reference, $merchant_sub_key)
     {
-        $this->makePaymentRequest($amount, $email, $full_name, $reference);
+        $this->makePaymentRequest($amount, $email, $full_name, $reference, $merchant_sub_key);
 
         $this->url = $this->getResponse()['data']['authorization_url'];
 
@@ -167,9 +168,9 @@ class Paystack
      * and might need to take different actions based on the success or not of the transaction
      * @return array
      */
-    public function getAuthorizationResponse($amount, $email, $full_name, $reference)
+    public function getAuthorizationResponse($amount, $email, $full_name, $reference, $merchant_sub_key)
     {
-        $this->makePaymentRequest($amount, $email, $full_name, $reference);
+        $this->makePaymentRequest($amount, $email, $full_name, $reference ,$merchant_sub_key);
 
         $this->url = $this->getResponse()['data']['authorization_url'];
 
